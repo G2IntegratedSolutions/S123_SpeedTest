@@ -29,6 +29,7 @@
                         console.log('Testing to:', server);
                     },
                     downloadMeasurement: function(measurement) {
+                        console.log('Download measurement:', measurement);
                         if (measurement.Data && measurement.Data.MeanClientMbps) {
                             document.getElementById('downloadSpeed').innerText = 'Download Speed: ' + measurement.Data.MeanClientMbps.toFixed(2) + ' Mbps';
                         }
@@ -39,11 +40,13 @@
                         }
                     },
                     uploadMeasurement: function(measurement) {
+                        console.log('Upload measurement:', measurement);
                         if (measurement.Data && measurement.Data.MeanClientMbps) {
                             document.getElementById('uploadSpeed').innerText = 'Upload Speed: ' + measurement.Data.MeanClientMbps.toFixed(2) + ' Mbps';
                         }
                     },
                     complete: function() {
+                        console.log('Test complete');
                         document.getElementById('status').innerText = 'Status: Complete';
                         sendResultsToSurvey123();
                     },
