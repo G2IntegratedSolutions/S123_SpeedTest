@@ -32,6 +32,9 @@
                         if (measurement.Data && measurement.Data.MeanClientMbps) {
                             document.getElementById('downloadSpeed').innerText = 'Download Speed: ' + measurement.Data.MeanClientMbps.toFixed(2) + ' Mbps';
                         }
+                        if (measurement.Data && measurement.Data.MinRTT) {
+                            document.getElementById('latency').innerText = 'Latency: ' + measurement.Data.MinRTT.toFixed(2) + ' ms';
+                        }
                     },
                     uploadMeasurement: function(measurement) {
                         if (measurement.Data && measurement.Data.MeanClientMbps) {
@@ -41,6 +44,10 @@
                     complete: function() {
                         document.getElementById('status').innerText = 'Status: Complete';
                         sendResultsToSurvey123();
+                    },
+                    error: function(err) {
+                        console.error('Error during test:', err);
+                        document.getElementById('status').innerText = 'Status: Error';
                     }
                 }
             );
