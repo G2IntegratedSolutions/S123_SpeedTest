@@ -39,8 +39,8 @@
                         if (measurement.Data && measurement.Data.MeanClientMbps) {
                             document.getElementById('downloadSpeed').innerText = 'Download Speed: ' + measurement.Data.MeanClientMbps.toFixed(2) + ' Mbps';
                         }
-                        if (measurement.Data && measurement.Data.MinRTT) {
-                            document.getElementById('latency').innerText = 'Latency: ' + measurement.Data.MinRTT.toFixed(2) + ' ms';
+                        if (measurement.Data && measurement.Data.BBRInfo && measurement.Data.BBRInfo.MinRTT) {
+                            document.getElementById('latency').innerText = 'Latency: ' + (measurement.Data.BBRInfo.MinRTT / 1000).toFixed(2) + ' ms';
                         } else {
                             console.log('Latency data not available in downloadMeasurement:', measurement);
                         }
