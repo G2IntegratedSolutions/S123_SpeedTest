@@ -58,7 +58,11 @@
             var uploadSpeed = document.getElementById('uploadSpeed').innerText.split(': ')[1];
             var latency = document.getElementById('latency').innerText.split(': ')[1];
 
-            var survey123Url = 'arcgis-survey123://?itemID=YOUR_SURVEY_ITEM_ID&field:download_speed=' + downloadSpeed + '&field:upload_speed=' + uploadSpeed + '&field:latency=' + latency;
+            if (latency === 'N/A') {
+                latency = '0'; // Default value if latency is not available
+            }
+
+            var survey123Url = 'arcgis-survey123://?itemID=fc3216bbdfe6487faf61bce5b5efb588&field:download_speed=' + downloadSpeed + '&field:upload_speed=' + uploadSpeed + '&field:latency=' + latency;
             window.location.href = survey123Url;
         }
     </script>
