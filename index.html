@@ -76,7 +76,8 @@
                 latency = '0'; // Default value if latency is not available
             }
 
-            var survey123Url = 'arcgis-survey123://?itemID=fc3216bbdfe6487faf61bce5b5efb588&field:download_speed=' + downloadSpeed + '&field:upload_speed=' + uploadSpeed + '&field:latency=' + latency;
+            // Use a standard HTTP URL for redirection
+            var survey123Url = 'https://survey123.srcgis.com/share/fc3216bbdfe6487faf61bce5b5efb588&field:download_speed=' + encodeURIComponent(downloadSpeed) + '&field:upload_speed=' + encodeURIComponent(uploadSpeed) + '&field:latency=' + encodeURIComponent(latency);
             window.location.href = survey123Url;
         }
     </script>
