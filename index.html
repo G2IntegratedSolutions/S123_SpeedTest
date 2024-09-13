@@ -1,1 +1,53 @@
-hello world
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speed Test</title>
+    <script src="https://github.com/m-lab/ndt7-js/blob/main/src/ndt7.min.js"></script> <!-- Replace with actual path to NDT7 library -->
+</head>
+<body>
+    <h1>Internet Speed Test</h1>
+    <button id="startTest">Start Test</button>
+    <p id="status">Status: Not started</p>
+    <p id="downloadSpeed">Download Speed: N/A</p>
+    <p id="uploadSpeed">Upload Speed: N/A</p>
+    <p id="latency">Latency: N/A</p>
+
+    <script>
+        document.getElementById('startTest').addEventListener('click', function() {
+            document.getElementById('status').innerText = 'Status: Testing...';
+
+            ndt7.test(
+                {
+                    userAcceptedDataPolicy: true
+                },
+                {
+                    serverChosen: function(server) {
+                        console.log('Testing to:', server);
+                    },
+                    downloadMeasurement: function(measurement) {
+                        document.getElementById('downloadSpeed').innerText = 'Download Speed: ' + measurement.Data.MeanClientMbps + ' Mbps';
+                    },
+                    uploadMeasurement: function(measurement) {
+                        document.getElementById('uploadSpeed').innerText = 'Upload Speed: ' + measurement.Data.MeanClientMbps + ' Mbps';
+                    },
+                    complete: function() {
+                        document.getElementById('status').innerText = 'Status: Complete';
+                        sendResultsToSurvey123();
+                    }
+                }
+            );
+        });
+
+        function sendResultsToSurvey123() {
+            var downloadSpeed = document.getElementById('downloadSpeed').innerText.split(': ')[1];
+            var uploadSpeed = document.getElementById('uploadSpeed').innerText.split(': ')[1];
+            var latency = document.getElementById('latency').innerText.split(': ')[1];
+
+            var survey123Url = 'arcgis-survey123://?itemID=YOUR_SURVEY_ITEM_ID&field:download_speed=' + downloadSpeed + '&field:upload_speed=' + uploadSpeed + '&field:latency=' + latency;
+            window.location.href = survey123Url;
+        }
+    </script>
+</body>
+</html>
