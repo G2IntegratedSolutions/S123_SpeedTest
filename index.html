@@ -18,6 +18,12 @@
         document.getElementById('startTest').addEventListener('click', function() {
             document.getElementById('status').innerText = 'Status: Testing...';
 
+            // Set a timeout to force the test to complete after 30 seconds
+            const testTimeout = setTimeout(function() {
+                document.getElementById('status').innerText = 'Status: Timeout';
+                sendResultsToSurvey123();
+            }, 30000);
+
             ndt7.test(
                 {
                     userAcceptedDataPolicy: true,
@@ -46,13 +52,16 @@
                         }
                     },
                     complete: function() {
+                        clearTimeout(testTimeout); // Clear the timeout if the test completes normally
                         console.log('Test complete');
                         document.getElementById('status').innerText = 'Status: Complete';
                         sendResultsToSurvey123();
                     },
                     error: function(err) {
+                        clearTimeout(testTimeout); // Clear the timeout if an error occurs
                         console.error('Error during test:', err);
                         document.getElementById('status').innerText = 'Status: Error';
+                        sendResultsToSurvey123();
                     }
                 }
             );
