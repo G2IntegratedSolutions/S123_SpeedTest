@@ -55,13 +55,13 @@
                         clearTimeout(testTimeout); // Clear the timeout if the test completes normally
                         console.log('Test complete');
                         document.getElementById('status').innerText = 'Status: Complete';
-                        setTimeout(sendResultsToSurvey123, 1000); // Add a slight delay before redirecting
+                        sendResultsToSurvey123(); // Redirect immediately after updating status
                     },
                     error: function(err) {
                         clearTimeout(testTimeout); // Clear the timeout if an error occurs
                         console.error('Error during test:', err);
                         document.getElementById('status').innerText = 'Status: Error';
-                        setTimeout(sendResultsToSurvey123, 1000); // Add a slight delay before redirecting
+                        sendResultsToSurvey123(); // Redirect immediately after updating status
                     }
                 }
             );
