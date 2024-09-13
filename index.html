@@ -34,6 +34,8 @@
                         }
                         if (measurement.Data && measurement.Data.MinRTT) {
                             document.getElementById('latency').innerText = 'Latency: ' + measurement.Data.MinRTT.toFixed(2) + ' ms';
+                        } else {
+                            console.log('Latency data not available in downloadMeasurement:', measurement);
                         }
                     },
                     uploadMeasurement: function(measurement) {
