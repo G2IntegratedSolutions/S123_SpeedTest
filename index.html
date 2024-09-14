@@ -43,7 +43,7 @@
             document.getElementById("runSpeedTest").innerText = "Running...";
 
             // Initialize the NDT7 client
-            const client = new ndt7.NDT7Client();
+            //const client = new ndt7.NDT7Client();
 
             // Variables to store results
             let downloadSpeed = 0;
@@ -51,11 +51,36 @@
             let latency = 0;
 
             //Start the test
-            client.test(
+            ndt7.test(
                 {
                     userAcceptedDataPolicy: true, // Required by M-Lab's policy
+                    downloadWorkerScript: 'ndt7-download-worker.min.js',
+                    uploadWorkerScript: 'ndt7-upload-worker.min.js'
                 },
-                (event) => {
+                {
+                    serverChosen: function(server) {
+                        console.log('Testing to:', server);
+                    },
+                    downloadMeasurement: function(measurement) {
+                        console.log('Download measurement:', measurement);
+                        if (measurement.Data && measurement.Data.MeanClientMbps) {
+                            downloadSpeed = (measurement.Data.MeanClientMbps).toFixed(2); // Mbps
+                        }
+                        if (measurement.Source === 'server' && measurement.Data.BBRInfo && measurement.Data.BBRInfo.MinRTT) {
+                            latency = (measurement.Data.BBRInfo.MinRTT / 1000).toFixed(2); // ms
+                        }
+                    },
+                    uploadMeasurement: function(measurement) {
+                        console.log('Upload measurement:', measurement);
+                        if (measurement.Data && measurement.Data.MeanClientMbps) {
+                            uploadSpeed = (measurement.Data.MeanClientMbps).toFixed(2); // Mbps
+                        }
+                    }
+                }
+
+
+
+               /*  (event) => {
                     // Handle measurements
                     if (event.Download) {
                         downloadSpeed = (event.Download.MeanClientMbps).toFixed(2); // Mbps
@@ -66,7 +91,7 @@
                     if (event.Download && event.Download.MinRTT) {
                         latency = (event.Download.MinRTT).toFixed(2); // ms
                     }
-                }
+                } */
             ).then(() => {
                 // Populate the survey fields with results
                 survey123WebForm.setQuestionValue('download_speed', parseFloat(downloadSpeed));
