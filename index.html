@@ -27,13 +27,14 @@
     </style>
 </head>
 <body>
-    <button id="runSpeedTest">Run Speed Test</button>
+    <!-- <button id="runSpeedTest">Run Speed Test</button> -->
     <div id="survey123Container"></div>
     <script>
         // Initialize the Survey123 Web Form
         var survey123WebForm = new Survey123WebForm({
             itemId: "d76488086d8a4fae8ab8c3a84b0496ac", // Replace with your form's item ID
-            container: "survey123Container"
+            container: "survey123Container",
+            customHtml: '<button id="runSpeedTest">Run Speed Test</button>'
         });
 
         // Function to run the NDT Speed Test
@@ -43,8 +44,6 @@
             document.getElementById("runSpeedTest").innerText = "Running...";
 
             // Initialize the NDT7 client
-            //const client = new ndt7.NDT7Client();
-
             // Variables to store results
             let downloadSpeed = 0;
             let uploadSpeed = 0;
@@ -100,7 +99,11 @@
             }
 
         // Add event listener to the button
-        document.getElementById("runSpeedTest").addEventListener("click", runSpeedTest); 
+        // document.getElementById("runSpeedTest").addEventListener("click", runSpeedTest); 
+        // Add event listener to the custom button in the Survey123 form
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("runSpeedTest").addEventListener("click", runSpeedTest);
+        });
     </script>
 </body>
 </html>
