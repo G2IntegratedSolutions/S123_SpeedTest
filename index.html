@@ -65,33 +65,22 @@
                         console.log('Download measurement:', measurement);
                         if (measurement.Data && measurement.Data.MeanClientMbps) {
                             downloadSpeed = (measurement.Data.MeanClientMbps).toFixed(2); // Mbps
+                            console.log('Download Speed:', downloadSpeed);
                         }
                         if (measurement.Source === 'server' && measurement.Data.BBRInfo && measurement.Data.BBRInfo.MinRTT) {
                             latency = (measurement.Data.BBRInfo.MinRTT / 1000).toFixed(2); // ms
+                            console.log('Latency:', latency);
                         }
                     },
                     uploadMeasurement: function(measurement) {
                         console.log('Upload measurement:', measurement);
                         if (measurement.Data && measurement.Data.MeanClientMbps) {
                             uploadSpeed = (measurement.Data.MeanClientMbps).toFixed(2); // Mbps
+                            console.log('Upload Speed:', uploadSpeed);
                         }
                     }
                 }
 
-
-
-               /*  (event) => {
-                    // Handle measurements
-                    if (event.Download) {
-                        downloadSpeed = (event.Download.MeanClientMbps).toFixed(2); // Mbps
-                    }
-                    if (event.Upload) {
-                        uploadSpeed = (event.Upload.MeanClientMbps).toFixed(2); // Mbps
-                    }
-                    if (event.Download && event.Download.MinRTT) {
-                        latency = (event.Download.MinRTT).toFixed(2); // ms
-                    }
-                } */
             ).then(() => {
                 // Populate the survey fields with results
                 survey123WebForm.setQuestionValue('download_speed', parseFloat(downloadSpeed));
@@ -104,9 +93,9 @@
                 }).catch((error) => {
                     console.error('NDT7 Error:', error);
                     alert("Speed test failed. Please try again.");
-                // Re-enable the button
-                document.getElementById("runSpeedTest").disabled = false;
-                document.getElementById("runSpeedTest").innerText = "Run Speed Test";
+                    // Re-enable the button
+                    document.getElementById("runSpeedTest").disabled = false;
+                    document.getElementById("runSpeedTest").innerText = "Run Speed Test";
                 });
             }
 
