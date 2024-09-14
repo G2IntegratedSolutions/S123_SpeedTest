@@ -6,63 +6,78 @@
     <script src="https://survey123.arcgis.com/api/jsapi"></script>
     <!-- Include M-Lab NDT JavaScript library -->
     <script src="https://www.measurementlab.net/ndt7.js"></script>
+    <!-- Add CSS to style the page -->
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+        #survey123Container {
+            flex: 1;
+            padding: 20px;
+        }
+        #runSpeedTest {
+            margin: 20px;
+            align-self: center;
+        }
+    </style>
 </head>
 <body>
     <div id="survey123Container"></div>
     <button id="runSpeedTest">Run Speed Test</button>
-<script>
-    // Initialize the Survey123 Web Form
-    var survey123WebForm = new Survey123WebForm({
-        itemId: "d76488086d8a4fae8ab8c3a84b0496ac", // Replace with your form's item ID
-        container: "survey123Container"
-    });
-
-// Function to run the NDT Speed Test
-function runSpeedTest() {
-        // Disable the button to prevent multiple clicks
-        document.getElementById("runSpeedTest").disabled = true;
-        document.getElementById("runSpeedTest").innerText = "Running...";
-
-        // Initialize the NDT7 client
-        var ndt7Client = new ndt7.NDT7Client();
-
-        // Variables to store results
-        var downloadSpeed = 0;
-        var uploadSpeed = 0;
-        var latency = 0;
-
-        // Start the test
-        ndt7Client.startTest({
-            userAcceptedDataPolicy: true, // Required by M-Lab's policy
-            measurementHook: function(measurement) {
-                // Handle measurements
-                if (measurement.Origin === 'client' && measurement.Test === 'download') {
-                    downloadSpeed = (measurement.AppInfo.Speed / 1e6).toFixed(2); // Mbps
-                }
-                if (measurement.Origin === 'client' && measurement.Test === 'upload') {
-                    uploadSpeed = (measurement.AppInfo.Speed / 1e6).toFixed(2); // Mbps
-                }
-                if (measurement.Origin === 'server' && measurement.Test === 'download') {
-                    latency = (measurement.ServerMeasurements.TCPInfo.Rtt / 1e3).toFixed(2); // ms
-                }
-            },
-            doneHook: function() {
-                // Populate the survey fields with results
-                survey123WebForm.setQuestionValue('download_speed', parseFloat(downloadSpeed));
-                survey123WebForm.setQuestionValue('upload_speed', parseFloat(uploadSpeed));
-                survey123WebForm.setQuestionValue('latency', parseFloat(latency));
-
-                // Re-enable the button
-                document.getElementById("runSpeedTest").disabled = false;
-                document.getElementById("runSpeedTest").innerText = "Run Speed Test";
-            }
+    <script>
+        // Initialize the Survey123 Web Form
+        var survey123WebForm = new Survey123WebForm({
+            itemId: "d76488086d8a4fae8ab8c3a84b0496ac", // Replace with your form's item ID
+            container: "survey123Container"
         });
-    }
 
-    // Add event listener to the button
-    document.getElementById("runSpeedTest").addEventListener("click", runSpeedTest);
+        // Function to run the NDT Speed Test
+        function runSpeedTest() {
+            // Disable the button to prevent multiple clicks
+            document.getElementById("runSpeedTest").disabled = true;
+            document.getElementById("runSpeedTest").innerText = "Running...";
 
-</script>
+            // Initialize the NDT7 client
+            var ndt7Client = new ndt7.NDT7Client();
+
+            // Variables to store results
+            var downloadSpeed = 0;
+            var uploadSpeed = 0;
+            var latency = 0;
+
+            // Start the test
+            ndt7Client.startTest({
+                userAcceptedDataPolicy: true, // Required by M-Lab's policy
+                measurementHook: function(measurement) {
+                    // Handle measurements
+                    if (measurement.Origin === 'client' && measurement.Test === 'download') {
+                        downloadSpeed = (measurement.AppInfo.Speed / 1e6).toFixed(2); // Mbps
+                    }
+                    if (measurement.Origin === 'client' && measurement.Test === 'upload') {
+                        uploadSpeed = (measurement.AppInfo.Speed / 1e6).toFixed(2); // Mbps
+                    }
+                    if (measurement.Origin === 'server' && measurement.Test === 'download') {
+                        latency = (measurement.ServerMeasurements.TCPInfo.Rtt / 1e3).toFixed(2); // ms
+                    }
+                },
+                doneHook: function() {
+                    // Populate the survey fields with results
+                    survey123WebForm.setQuestionValue('download_speed', parseFloat(downloadSpeed));
+                    survey123WebForm.setQuestionValue('upload_speed', parseFloat(uploadSpeed));
+                    survey123WebForm.setQuestionValue('latency', parseFloat(latency));
+
+                    // Re-enable the button
+                    document.getElementById("runSpeedTest").disabled = false;
+                    document.getElementById("runSpeedTest").innerText = "Run Speed Test";
+                }
+            });
+        }
+
+        // Add event listener to the button
+        document.getElementById("runSpeedTest").addEventListener("click", runSpeedTest);
+    </script>
 </body>
 </html>
-
