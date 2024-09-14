@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internet Speed Test</title>
+    <script src="https://cdn.jsdelivr.net/gh/m-lab/ndt7-js/src/ndt7.min.js"></script>
+</head>
+<body>
+    <h1>Internet Speed Test</h1>
+    <button id="startTest">Start Test</button>
+    <p id="status">Status: Not started</p>
+    <p id="downloadSpeed">Download Speed: N/A</p>
+    <p id="uploadSpeed">Upload Speed: N/A</p>
+    <p id="latency">Latency: N/A</p>
+
+    <script>
+        document.getElementById('startTest').addEventListener('click', function() {
+            document.getElementById('status').innerText = 'Status: Testing...';
+
+            // Set a timeout to force the test to complete after 30 seconds
+            const testTimeout = setTimeout(function() {
+                document.getElementById('status').innerText = 'Status: Timeout';
+                sendResultsToSurvey123();
+            }, 30000);
+
+            ndt7.test(
+                {
+                    userAcceptedDataPolicy: true,
+                    downloadWorkerScript: 'ndt7-download-worker.min.js',
+                    uploadWorkerScript: 'ndt7-upload-worker.min.js'
+                },
+                {
+                    serverChosen: function(server) {
+                        console.log('Testing to:', server);
+                    },
+                    downloadMeasurement: function(measurement) {
+                        console.log('Download measurement:', measurement);
+                        if (measurement.Data && measurement.Data.MeanClientMbps) {
+                            document.getElementById('downloadSpeed').innerText = 'Download Speed: ' + measurement.Data.MeanClientMbps.toFixed(2) + ' Mbps';
+                        }
+                        if (measurement.Source === 'server' && measurement.Data.BBRInfo && measurement.Data.BBRInfo.MinRTT) {
+                            document.getElementById('latency').innerText = 'Latency: ' + (measurement.Data.BBRInfo.MinRTT / 1000).toFixed(2) + ' ms';
+                        } else if (measurement.Source === 'server') {
+                            console.log('Latency data not available in downloadMeasurement:', measurement);
+                        }
+                    },
+                    uploadMeasurement: function(measurement) {
+                        console.log('Upload measurement:', measurement);
+                        if (measurement.Data && measurement.Data.MeanClientMbps) {
+                            document.getElementById('uploadSpeed').innerText = 'Upload Speed: ' + measurement.Data.MeanClientMbps.toFixed(2) + ' Mbps';
+                        }
+                    },
+                    complete: function() {
+                        clearTimeout(testTimeout); // Clear the timeout if the test completes normally
+                        console.log('Test complete');
+                        document.getElementById('status').innerText = 'Status: Complete';
+                        sendResultsToSurvey123(); // Redirect immediately after updating status
+                    },
+                    error: function(err) {
+                        clearTimeout(testTimeout); // Clear the timeout if an error occurs
+                        console.error('Error during test:', err);
+                        document.getElementById('status').innerText = 'Status: Error';
+                        sendResultsToSurvey123(); // Redirect immediately after updating status
+                    }
+                }
+            );
+        });
+
+        function sendResultsToSurvey123() {
+            var downloadSpeed = parseFloat(document.getElementById('downloadSpeed').innerText.split(': ')[1].replace(' Mbps', ''));
+            var uploadSpeed = parseFloat(document.getElementById('uploadSpeed').innerText.split(': ')[1].replace(' Mbps', ''));
+            var latency = parseFloat(document.getElementById('latency').innerText.split(': ')[1].replace(' ms', ''));
+
+            if (isNaN(latency)) {
+                latency = 0; // Default value if latency is not available
+            }
+
+            // Use a standard HTTP URL for redirection
+            var survey123Url = 'https://survey123.arcgis.com/share/fc3216bbdfe6487faf61bce5b5efb588?field:download_speed=' + downloadSpeed + '&field:upload_speed=' + uploadSpeed + '&field:latency=' + latency;
+            window.location.href = survey123Url;
+        }
+    </script>
+</body>
+</html>
