@@ -83,9 +83,9 @@
 
             ).then(() => {
                 // Populate the survey fields with results
-                survey123WebForm.setQuestionValue('download_speed', parseFloat(downloadSpeed));
-                survey123WebForm.setQuestionValue('upload_speed', parseFloat(uploadSpeed));
-                survey123WebForm.setQuestionValue('latency', parseFloat(latency));
+                survey123WebForm.setQuestionValue({'download_speed': parseFloat(downloadSpeed)});
+                survey123WebForm.setQuestionValue({'upload_speed': parseFloat(uploadSpeed)});
+                survey123WebForm.setQuestionValue({'latency': parseFloat(latency)});
 
                 // Re-enable the button
                 document.getElementById("runSpeedTest").disabled = false;
