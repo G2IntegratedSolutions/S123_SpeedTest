@@ -19,15 +19,25 @@
             height: calc(100% - 60px);
             overflow: auto;
         }
-        #runSpeedTest {
-            margin: 10px;
-            padding: 10px 20px;
+        .custom-button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
             font-size: 16px;
+            background-color: #0079c1;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+        }
+        .custom-button:hover {
+            background-color: #005a8c;
         }
     </style>
 </head>
 <body>
-    <!-- <button id="runSpeedTest">Run Speed Test</button> -->
     <div id="survey123Container"></div>
     <script>
         // Initialize the Survey123 Web Form
@@ -43,7 +53,6 @@
             document.getElementById("runSpeedTest").innerText = "Running...";
 
             // Initialize the NDT7 client
-            // Variables to store results
             let downloadSpeed = 0;
             let uploadSpeed = 0;
             let latency = 0;
@@ -60,7 +69,7 @@
                         console.log('Testing to:', server);
                     },
                     downloadMeasurement: function(measurement) {
-                        console.log('Download measurement:', measurement);
+                        //console.log('Download measurement:', measurement);
                         if (measurement.Data && measurement.Data.MeanClientMbps) {
                             downloadSpeed = (measurement.Data.MeanClientMbps).toFixed(2); // Mbps
                             console.log('Download Speed:', downloadSpeed);
@@ -71,7 +80,7 @@
                         }
                     },
                     uploadMeasurement: function(measurement) {
-                        console.log('Upload measurement:', measurement);
+                        //console.log('Upload measurement:', measurement);
                         if (measurement.Data && measurement.Data.MeanClientMbps) {
                             uploadSpeed = (measurement.Data.MeanClientMbps).toFixed(2); // Mbps
                             console.log('Upload Speed:', uploadSpeed);
@@ -102,10 +111,17 @@
                 const customButton = document.createElement('button');
                 customButton.id = 'runSpeedTest';
                 customButton.innerText = 'Run Speed Test';
-                customButton.style.margin = '10px';
-                customButton.style.padding = '10px 20px';
-                customButton.style.fontSize = '16px';
-                document.getElementById('survey123Container').appendChild(customButton);
+                customButton.className = 'custom-button';
+
+                // Find the Download Speed field and insert the button above it
+                const iframe = document.querySelector('#survey123Container iframe');
+                if (iframe) {
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    const downloadSpeedField = iframeDoc.querySelector('[data-question-name="download_speed"]');
+                    if (downloadSpeedField) {
+                        downloadSpeedField.parentNode.insertBefore(customButton, downloadSpeedField);
+                    }
+                }
 
                 // Add event listener to the custom button
                 customButton.addEventListener('click', runSpeedTest);
@@ -113,10 +129,11 @@
 
             // Polling function to check if the Survey123 form is loaded
             function checkFormLoaded() {
-                if (document.querySelector('#survey123Container iframe')) {
+                const iframe = document.querySelector('#survey123Container iframe');
+                if (iframe && iframe.contentDocument && iframe.contentDocument.readyState === 'complete') {
                     addCustomButton();
                 } else {
-                    setTimeout(checkFormLoaded, 1000); // Check again after 1 second
+                setTimeout(checkFormLoaded, 1000); // Check again after 1 second
                 }
             }
 
