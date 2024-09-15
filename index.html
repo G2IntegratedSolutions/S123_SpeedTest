@@ -115,12 +115,20 @@
             // Find the Download Speed field and insert the button above it
             const iframe = document.querySelector('#survey123Container iframe');
             if (iframe) {
+                console.log(iframe.contentDocument.readyState);
                 const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
                 const downloadSpeedField = iframeDoc.querySelector('[data-question-name="download_speed"]');
+                console.log('Download Speed field:', downloadSpeedField);
                 if (downloadSpeedField) {
                     downloadSpeedField.parentNode.insertBefore(customButton, downloadSpeedField);
+                    console.log('Button added to the form.');
+                } else {
+                    console.log('Download Speed field not found.');
                 }
+            } else {
+                 console.log('Iframe not found.');
             }
+            
 
             // Add event listener to the custom button
             customButton.addEventListener('click', runSpeedTest);
@@ -128,6 +136,7 @@
 
         // MutationObserver to detect when the Survey123 form is loaded
         const observer = new MutationObserver((mutationsList, observer) => {
+            console.log('MutationObserver triggered.');
             const iframe = document.querySelector('#survey123Container iframe');
             if (iframe && iframe.contentDocument && iframe.contentDocument.readyState === 'complete') {
                 addCustomButton();
@@ -143,6 +152,7 @@
 
         // Fallback to ensure the button is added if MutationObserver fails
         function ensureButtonAdded() {
+            console.log('Ensuring button is added...');
             const iframe = document.querySelector('#survey123Container iframe');
             if (iframe && iframe.contentDocument && iframe.contentDocument.readyState === 'complete') {
                 addCustomButton();
