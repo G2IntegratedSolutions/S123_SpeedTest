@@ -78,7 +78,7 @@
                         console.log('Testing to:', server);
                     },
                     downloadMeasurement: function(measurement) {
-                        console.log('Download measurement:', measurement);
+                        //console.log('Download measurement:', measurement);
                         if (measurement.Data && measurement.Data.MeanClientMbps) {
                             downloadSpeed = (measurement.Data.MeanClientMbps).toFixed(2); // Mbps
                             console.log('Download Speed:', downloadSpeed);
@@ -89,7 +89,7 @@
                         }
                     },
                     uploadMeasurement: function(measurement) {
-                        console.log('Upload measurement:', measurement);
+                        //console.log('Upload measurement:', measurement);
                         if (measurement.Data && measurement.Data.MeanClientMbps) {
                             uploadSpeed = (measurement.Data.MeanClientMbps).toFixed(2); // Mbps
                             console.log('Upload Speed:', uploadSpeed);
