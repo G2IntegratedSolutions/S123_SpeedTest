@@ -32,21 +32,29 @@
             padding: 10px 20px;
             font-size: 16px;
             background-color: #31872e;
-            color: rgb(0, 0, 0);
+            color: rgb(255, 255, 255);
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            font-weight: bold;
         }
         #runSpeedTest:hover {
             background-color: #accfab;
+            color: rgb(0, 0, 0);
+            font-weight: bold;
         }
-
+        #progress {
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
     <div id="survey123Container"></div>
     <div id="runSpeedTestBar">
         <button id="runSpeedTest">Run Speed Test</button>
+        <div id="progress"></div>
     </div>
     <script>
         // Initialize the Survey123 Web Form
@@ -60,6 +68,7 @@
             // Disable the button to prevent multiple clicks
             document.getElementById("runSpeedTest").disabled = true;
             document.getElementById("runSpeedTest").innerText = "Running...";
+            document.getElementById("progress").innerText = "Starting speed test...";
 
             // Initialize the NDT7 client
             let downloadSpeed = 0;
@@ -78,9 +87,9 @@
                         console.log('Testing to:', server);
                     },
                     downloadMeasurement: function(measurement) {
-                        //console.log('Download measurement:', measurement);
                         if (measurement.Data && measurement.Data.MeanClientMbps) {
                             downloadSpeed = (measurement.Data.MeanClientMbps).toFixed(2); // Mbps
+                            document.getElementById("progress").innerText = `Download Speed: ${downloadSpeed} Mbps`;
                             console.log('Download Speed:', downloadSpeed);
                         }
                         if (measurement.Source === 'server' && measurement.Data.BBRInfo && measurement.Data.BBRInfo.MinRTT) {
@@ -89,9 +98,9 @@
                         }
                     },
                     uploadMeasurement: function(measurement) {
-                        //console.log('Upload measurement:', measurement);
                         if (measurement.Data && measurement.Data.MeanClientMbps) {
                             uploadSpeed = (measurement.Data.MeanClientMbps).toFixed(2); // Mbps
+                            document.getElementById("progress").innerText = `Upload Speed: ${uploadSpeed} Mbps`;
                             console.log('Upload Speed:', uploadSpeed);
                         }
                     }
@@ -105,12 +114,14 @@
                 // Re-enable the button
                 document.getElementById("runSpeedTest").disabled = false;
                 document.getElementById("runSpeedTest").innerText = "Run Speed Test";
+                document.getElementById("progress").innerText = "Speed test completed.";
             }).catch((error) => {
                 console.error('NDT7 Error:', error);
                 alert("Speed test failed. Please try again.");
                 // Re-enable the button
                 document.getElementById("runSpeedTest").disabled = false;
                 document.getElementById("runSpeedTest").innerText = "Run Speed Test";
+                document.getElementById("progress").innerText = "Speed test failed.";
             });
         }
 
