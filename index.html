@@ -107,6 +107,7 @@
 
         // Function to add the custom button
         function addCustomButton() {
+            console.log('Adding custom button...');
             const customButton = document.createElement('button');
             customButton.id = 'runSpeedTest';
             customButton.innerText = 'Run Speed Test';
@@ -115,8 +116,9 @@
             // Find the Download Speed field and insert the button above it
             const iframe = document.querySelector('#survey123Container iframe');
             if (iframe) {
-                console.log(iframe.contentDocument.readyState);
+                console.log('Iframe found:', iframe);
                 const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                console.log('Iframe document ready state:', iframeDoc.readyState);
                 const downloadSpeedField = iframeDoc.querySelector('[data-question-name="download_speed"]');
                 console.log('Download Speed field:', downloadSpeedField);
                 if (downloadSpeedField) {
@@ -126,9 +128,8 @@
                     console.log('Download Speed field not found.');
                 }
             } else {
-                 console.log('Iframe not found.');
+                console.log('Iframe not found.');
             }
-            
 
             // Add event listener to the custom button
             customButton.addEventListener('click', runSpeedTest);
@@ -154,11 +155,17 @@
         function ensureButtonAdded() {
             console.log('Ensuring button is added...');
             const iframe = document.querySelector('#survey123Container iframe');
-            if (iframe && iframe.contentDocument && iframe.contentDocument.readyState === 'complete') {
-                addCustomButton();
+            if (iframe) {
+                console.log('Iframe found:', iframe);
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                console.log('Iframe document ready state:', iframeDoc.readyState);
+                if (iframeDoc.readyState === 'complete') {
+                    addCustomButton();
+                }
             } else {
-                setTimeout(ensureButtonAdded, 1000); // Check again after 1 second
+                console.log('Iframe not found.');
             }
+            setTimeout(ensureButtonAdded, 1000); // Check again after 1 second
         }
 
         // Start the fallback mechanism
