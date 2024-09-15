@@ -57,7 +57,7 @@
             let uploadSpeed = 0;
             let latency = 0;
 
-            //Start the test
+            // Start the test
             ndt7.test(
                 {
                     userAcceptedDataPolicy: true, // Required by M-Lab's policy
@@ -69,7 +69,7 @@
                         console.log('Testing to:', server);
                     },
                     downloadMeasurement: function(measurement) {
-                        //console.log('Download measurement:', measurement);
+                        console.log('Download measurement:', measurement);
                         if (measurement.Data && measurement.Data.MeanClientMbps) {
                             downloadSpeed = (measurement.Data.MeanClientMbps).toFixed(2); // Mbps
                             console.log('Download Speed:', downloadSpeed);
@@ -80,14 +80,13 @@
                         }
                     },
                     uploadMeasurement: function(measurement) {
-                        //console.log('Upload measurement:', measurement);
+                        console.log('Upload measurement:', measurement);
                         if (measurement.Data && measurement.Data.MeanClientMbps) {
                             uploadSpeed = (measurement.Data.MeanClientMbps).toFixed(2); // Mbps
                             console.log('Upload Speed:', uploadSpeed);
                         }
                     }
                 }
-
             ).then(() => {
                 // Populate the survey fields with results
                 survey123WebForm.setQuestionValue({'download_speed': parseFloat(downloadSpeed)});
@@ -97,50 +96,50 @@
                 // Re-enable the button
                 document.getElementById("runSpeedTest").disabled = false;
                 document.getElementById("runSpeedTest").innerText = "Run Speed Test";
-                }).catch((error) => {
-                    console.error('NDT7 Error:', error);
-                    alert("Speed test failed. Please try again.");
-                    // Re-enable the button
-                    document.getElementById("runSpeedTest").disabled = false;
-                    document.getElementById("runSpeedTest").innerText = "Run Speed Test";
-                });
-            }
-
-            // Function to add the custom button
-            function addCustomButton() {
-                const customButton = document.createElement('button');
-                customButton.id = 'runSpeedTest';
-                customButton.innerText = 'Run Speed Test';
-                customButton.className = 'custom-button';
-
-                // Find the Download Speed field and insert the button above it
-                const iframe = document.querySelector('#survey123Container iframe');
-                if (iframe) {
-                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                    const downloadSpeedField = iframeDoc.querySelector('[data-question-name="download_speed"]');
-                    if (downloadSpeedField) {
-                        downloadSpeedField.parentNode.insertBefore(customButton, downloadSpeedField);
-                    }
-                }
-
-                // Add event listener to the custom button
-                customButton.addEventListener('click', runSpeedTest);
-            }
-
-            // Polling function to check if the Survey123 form is loaded
-            function checkFormLoaded() {
-                const iframe = document.querySelector('#survey123Container iframe');
-                if (iframe && iframe.contentDocument && iframe.contentDocument.readyState === 'complete') {
-                    addCustomButton();
-                } else {
-                setTimeout(checkFormLoaded, 1000); // Check again after 1 second
-                }
-            }
-
-            // Start polling when the DOM is fully loaded
-            document.addEventListener("DOMContentLoaded", function() {
-                checkFormLoaded();
+            }).catch((error) => {
+                console.error('NDT7 Error:', error);
+                alert("Speed test failed. Please try again.");
+                // Re-enable the button
+                document.getElementById("runSpeedTest").disabled = false;
+                document.getElementById("runSpeedTest").innerText = "Run Speed Test";
             });
+        }
+
+        // Function to add the custom button
+        function addCustomButton() {
+            const customButton = document.createElement('button');
+            customButton.id = 'runSpeedTest';
+            customButton.innerText = 'Run Speed Test';
+            customButton.className = 'custom-button';
+
+            // Find the Download Speed field and insert the button above it
+            const iframe = document.querySelector('#survey123Container iframe');
+            if (iframe) {
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                const downloadSpeedField = iframeDoc.querySelector('[data-question-name="download_speed"]');
+                if (downloadSpeedField) {
+                    downloadSpeedField.parentNode.insertBefore(customButton, downloadSpeedField);
+                }
+            }
+
+            // Add event listener to the custom button
+            customButton.addEventListener('click', runSpeedTest);
+        }
+
+        // MutationObserver to detect when the Survey123 form is loaded
+        const observer = new MutationObserver((mutationsList, observer) => {
+            const iframe = document.querySelector('#survey123Container iframe');
+            if (iframe && iframe.contentDocument && iframe.contentDocument.readyState === 'complete') {
+                addCustomButton();
+                observer.disconnect(); // Stop observing once the button is added
+            }
+        });
+
+        // Start observing the survey123Container for changes
+        document.addEventListener("DOMContentLoaded", function() {
+            const surveyContainer = document.getElementById('survey123Container');
+            observer.observe(surveyContainer, { childList: true, subtree: true });
+        });
     </script>
 </body>
 </html>
