@@ -98,12 +98,23 @@
                 });
             }
 
-        // Add event listener to the button
-        // document.getElementById("runSpeedTest").addEventListener("click", runSpeedTest); 
-        // Add event listener to the custom button in the Survey123 form
-        document.addEventListener("DOMContentLoaded", function() {
-            document.getElementById("runSpeedTest").addEventListener("click", runSpeedTest);
-        });
+            // Add event listener to the custom button in the Survey123 form
+            document.addEventListener("DOMContentLoaded", function() {
+                // Ensure the Survey123 form is fully loaded before adding the event listener
+                survey123WebForm.on('load', function() {
+                    // Add the custom button to the form
+                    const customButton = document.createElement('button');
+                    customButton.id = 'runSpeedTest';
+                    customButton.innerText = 'Run Speed Test';
+                    customButton.style.margin = '10px';
+                    customButton.style.padding = '10px 20px';
+                    customButton.style.fontSize = '16px';
+                    document.getElementById('survey123Container').appendChild(customButton);
+
+                    // Add event listener to the custom button
+                    customButton.addEventListener('click', runSpeedTest);
+                });
+            });
     </script>
 </body>
 </html>
