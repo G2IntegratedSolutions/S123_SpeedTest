@@ -40,9 +40,7 @@
         #runSpeedTest:hover {
             background-color: #005a8c;
         }
-        .extra-bold {
-            font-weight: 800;
-        }
+
     </style>
 </head>
 <body>
@@ -103,15 +101,6 @@
                 survey123WebForm.setQuestionValue({'download_speed': parseFloat(downloadSpeed)});
                 survey123WebForm.setQuestionValue({'upload_speed': parseFloat(uploadSpeed)});
                 survey123WebForm.setQuestionValue({'latency': parseFloat(latency)});
-
-                // Apply extra bold style to the fields
-                const iframe = document.querySelector('#survey123Container iframe');
-                if (iframe) {
-                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                    iframeDoc.querySelector('[data-question-name="download_speed"] input').classList.add('extra-bold');
-                    iframeDoc.querySelector('[data-question-name="upload_speed"] input').classList.add('extra-bold');
-                    iframeDoc.querySelector('[data-question-name="latency"] input').classList.add('extra-bold');
-                }
 
                 // Re-enable the button
                 document.getElementById("runSpeedTest").disabled = false;
