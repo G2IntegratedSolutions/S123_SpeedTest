@@ -13,22 +13,43 @@
             width: 100%;
             margin: 0;
             padding: 0;
+            font-family: Arial, sans-serif;
         }
         #survey123Container {
             width: 100%;
             height: calc(100% - 60px);
             overflow: auto;
         }
+        #runSpeedTestBar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #0079c1;
+            text-align: center;
+            padding: 10px 0;
+        }
         #runSpeedTest {
-            margin: 10px;
             padding: 10px 20px;
             font-size: 16px;
+            background-color: #0079c1;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #runSpeedTest:hover {
+            background-color: #005a8c;
+        }
+        .extra-bold {
+            font-weight: 800;
         }
     </style>
 </head>
 <body>
-    <button id="runSpeedTest">Run Speed Test</button>
     <div id="survey123Container"></div>
+    <div id="runSpeedTestBar">
+        <button id="runSpeedTest">Run Speed Test</button>
+    </div>
     <script>
         // Initialize the Survey123 Web Form
         var survey123WebForm = new Survey123WebForm({
@@ -43,14 +64,11 @@
             document.getElementById("runSpeedTest").innerText = "Running...";
 
             // Initialize the NDT7 client
-            //const client = new ndt7.NDT7Client();
-
-            // Variables to store results
             let downloadSpeed = 0;
             let uploadSpeed = 0;
             let latency = 0;
 
-            //Start the test
+            // Start the test
             ndt7.test(
                 {
                     userAcceptedDataPolicy: true, // Required by M-Lab's policy
@@ -80,24 +98,32 @@
                         }
                     }
                 }
-
             ).then(() => {
                 // Populate the survey fields with results
                 survey123WebForm.setQuestionValue({'download_speed': parseFloat(downloadSpeed)});
                 survey123WebForm.setQuestionValue({'upload_speed': parseFloat(uploadSpeed)});
                 survey123WebForm.setQuestionValue({'latency': parseFloat(latency)});
 
+                // Apply extra bold style to the fields
+                const iframe = document.querySelector('#survey123Container iframe');
+                if (iframe) {
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    iframeDoc.querySelector('[data-question-name="download_speed"] input').classList.add('extra-bold');
+                    iframeDoc.querySelector('[data-question-name="upload_speed"] input').classList.add('extra-bold');
+                    iframeDoc.querySelector('[data-question-name="latency"] input').classList.add('extra-bold');
+                }
+
                 // Re-enable the button
                 document.getElementById("runSpeedTest").disabled = false;
                 document.getElementById("runSpeedTest").innerText = "Run Speed Test";
-                }).catch((error) => {
-                    console.error('NDT7 Error:', error);
-                    alert("Speed test failed. Please try again.");
-                    // Re-enable the button
-                    document.getElementById("runSpeedTest").disabled = false;
-                    document.getElementById("runSpeedTest").innerText = "Run Speed Test";
-                });
-            }
+            }).catch((error) => {
+                console.error('NDT7 Error:', error);
+                alert("Speed test failed. Please try again.");
+                // Re-enable the button
+                document.getElementById("runSpeedTest").disabled = false;
+                document.getElementById("runSpeedTest").innerText = "Run Speed Test";
+            });
+        }
 
         // Add event listener to the button
         document.getElementById("runSpeedTest").addEventListener("click", runSpeedTest); 
