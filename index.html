@@ -98,22 +98,32 @@
                 });
             }
 
-            // Add event listener to the custom button in the Survey123 form
-            document.addEventListener("DOMContentLoaded", function() {
-                // Ensure the Survey123 form is fully loaded before adding the event listener
-                survey123WebForm.on('load', function() {
-                    // Add the custom button to the form
-                    const customButton = document.createElement('button');
-                    customButton.id = 'runSpeedTest';
-                    customButton.innerText = 'Run Speed Test';
-                    customButton.style.margin = '10px';
-                    customButton.style.padding = '10px 20px';
-                    customButton.style.fontSize = '16px';
-                    document.getElementById('survey123Container').appendChild(customButton);
+            // Function to add the custom button
+            function addCustomButton() {
+                const customButton = document.createElement('button');
+                customButton.id = 'runSpeedTest';
+                customButton.innerText = 'Run Speed Test';
+                customButton.style.margin = '10px';
+                customButton.style.padding = '10px 20px';
+                customButton.style.fontSize = '16px';
+                document.getElementById('survey123Container').appendChild(customButton);
 
-                    // Add event listener to the custom button
-                    customButton.addEventListener('click', runSpeedTest);
-                });
+                // Add event listener to the custom button
+                customButton.addEventListener('click', runSpeedTest);
+            }
+
+            // Polling function to check if the Survey123 form is loaded
+            function checkFormLoaded() {
+                if (document.querySelector('#survey123Container iframe')) {
+                    addCustomButton();
+                } else {
+                    setTimeout(checkFormLoaded, 1000); // Check again after 1 second
+                }
+            }
+
+            // Start polling when the DOM is fully loaded
+            document.addEventListener("DOMContentLoaded", function() {
+                checkFormLoaded();
             });
     </script>
 </body>
