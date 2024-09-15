@@ -39,6 +39,7 @@
 </head>
 <body>
     <div id="survey123Container"></div>
+    <button id="runSpeedTest" class="custom-button">Run Speed Test</button>
     <script>
         // Initialize the Survey123 Web Form
         var survey123WebForm = new Survey123WebForm({
@@ -88,10 +89,16 @@
                     }
                 }
             ).then(() => {
-                // Populate the survey fields with results
-                survey123WebForm.setQuestionValue({'download_speed': parseFloat(downloadSpeed)});
-                survey123WebForm.setQuestionValue({'upload_speed': parseFloat(uploadSpeed)});
-                survey123WebForm.setQuestionValue({'latency': parseFloat(latency)});
+                // Send the results to the iframe
+                const iframe = document.querySelector('#survey123Container iframe');
+                if (iframe) {
+                    const message = {
+                        download_speed: parseFloat(downloadSpeed),
+                        upload_speed: parseFloat(uploadSpeed),
+                        latency: parseFloat(latency)
+                    };
+                    iframe.contentWindow.postMessage(message, '*');
+                }
 
                 // Re-enable the button
                 document.getElementById("runSpeedTest").disabled = false;
@@ -105,71 +112,16 @@
             });
         }
 
-        // Function to add the custom button
-        function addCustomButton() {
-            console.log('Adding custom button...');
-            const customButton = document.createElement('button');
-            customButton.id = 'runSpeedTest';
-            customButton.innerText = 'Run Speed Test';
-            customButton.className = 'custom-button';
+        // Add event listener to the custom button
+        document.getElementById('runSpeedTest').addEventListener('click', runSpeedTest);
 
-            // Find the Download Speed field and insert the button above it
-            const iframe = document.querySelector('#survey123Container iframe');
-            if (iframe) {
-                console.log('Iframe found:', iframe);
-                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                console.log('Iframe document ready state:', iframeDoc.readyState);
-                const downloadSpeedField = iframeDoc.querySelector('[data-question-name="download_speed"]');
-                console.log('Download Speed field:', downloadSpeedField);
-                if (downloadSpeedField) {
-                    downloadSpeedField.parentNode.insertBefore(customButton, downloadSpeedField);
-                    console.log('Button added to the form.');
-                } else {
-                    console.log('Download Speed field not found.');
-                }
-            } else {
-                console.log('Iframe not found.');
+        // Listen for messages from the iframe
+        window.addEventListener('message', function(event) {
+            if (event.origin !== 'https://survey123.arcgis.com') {
+                return;
             }
-
-            // Add event listener to the custom button
-            customButton.addEventListener('click', runSpeedTest);
-        }
-
-        // MutationObserver to detect when the Survey123 form is loaded
-        const observer = new MutationObserver((mutationsList, observer) => {
-            console.log('MutationObserver triggered.');
-            const iframe = document.querySelector('#survey123Container iframe');
-            if (iframe && iframe.contentDocument && iframe.contentDocument.readyState === 'complete') {
-                addCustomButton();
-                observer.disconnect(); // Stop observing once the button is added
-            }
+            console.log('Message received from iframe:', event.data);
         });
-
-        // Start observing the survey123Container for changes
-        document.addEventListener("DOMContentLoaded", function() {
-            const surveyContainer = document.getElementById('survey123Container');
-            observer.observe(surveyContainer, { childList: true, subtree: true });
-        });
-
-        // Fallback to ensure the button is added if MutationObserver fails
-        function ensureButtonAdded() {
-            console.log('Ensuring button is added...');
-            const iframe = document.querySelector('#survey123Container iframe');
-            if (iframe) {
-                console.log('Iframe found:', iframe);
-                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                console.log('Iframe document ready state:', iframeDoc.readyState);
-                if (iframeDoc.readyState === 'complete') {
-                    addCustomButton();
-                }
-            } else {
-                console.log('Iframe not found.');
-            }
-            setTimeout(ensureButtonAdded, 1000); // Check again after 1 second
-        }
-
-        // Start the fallback mechanism
-        ensureButtonAdded();
     </script>
 </body>
 </html>
