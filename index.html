@@ -116,36 +116,6 @@
                 survey123WebForm.setQuestionValue({'upload_speed': parseFloat(uploadSpeed)});
                 survey123WebForm.setQuestionValue({'latency': parseFloat(latency)});
 
-
-                
-
-                // Apply custom styles to the read-only fields
-                const iframe = document.querySelector('#survey123Container iframe');
-                if (iframe) {
-                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                    const downloadSpeedInput = iframeDoc.querySelector('[data-question-name="download_speed"] input');
-                    const uploadSpeedInput = iframeDoc.querySelector('[data-question-name="upload_speed"] input');
-                    const latencyInput = iframeDoc.querySelector('[data-question-name="latency"] input');
-
-                    if (downloadSpeedInput) {
-                        downloadSpeedInput.style.fontWeight = 'bold';
-                        downloadSpeedInput.style.fontSize = '18px';
-                        downloadSpeedInput.style.color = 'black';
-                    }
-                    if (uploadSpeedInput) {
-                        uploadSpeedInput.style.fontWeight = 'bold';
-                        uploadSpeedInput.style.fontSize = '18px';
-                        uploadSpeedInput.style.color = 'black';
-                    }
-                    if (latencyInput) {
-                        latencyInput.style.fontWeight = 'bold';
-                        latencyInput.style.fontSize = '18px';
-                        latencyInput.style.color = 'black';
-                    }
-                }                
-
-
-
                 // Re-enable the button
                 document.getElementById("runSpeedTest").disabled = false;
                 document.getElementById("runSpeedTest").innerText = "Run Speed Test";
