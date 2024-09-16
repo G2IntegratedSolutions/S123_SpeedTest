@@ -96,7 +96,7 @@
                             // console.log('Download Speed:', downloadSpeed);
                         }
                         if (measurement.Source === 'server' && measurement.Data.TCPInfo && measurement.Data.TCPInfo.MinRTT) {
-                            latency = (measurement.Data.BBRInfo.MinRTT / 1000).toFixed(2); // ms
+                            latency = (measurement.Data.TCPInfo.MinRTT / 1000).toFixed(2); // ms
                             // Log latency only if necessary for debugging
                             // console.log('Latency:', latency);
                         }
