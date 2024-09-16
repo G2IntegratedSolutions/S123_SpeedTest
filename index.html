@@ -89,20 +89,20 @@
                         // console.log('Testing to:', server);
                     },
                     downloadMeasurement: function(measurement) {
-                        if (measurement.Data && measurement.Data.MeanClientMbps) {
+                        if (measurement.Source == 'client' && measurement.Data && measurement.Data.MeanClientMbps) {
                             downloadSpeed = (measurement.Data.MeanClientMbps).toFixed(2); // Mbps
                             document.getElementById("progress").innerText = `Download Speed: ${downloadSpeed} Mbps`;
                             // Log download speed only if necessary for debugging
                             // console.log('Download Speed:', downloadSpeed);
                         }
-                        if (measurement.Source === 'server' && measurement.Data.BBRInfo && measurement.Data.BBRInfo.MinRTT) {
+                        if (measurement.Source === 'server' && measurement.Data.TCPInfo && measurement.Data.TCPInfo.MinRTT) {
                             latency = (measurement.Data.BBRInfo.MinRTT / 1000).toFixed(2); // ms
                             // Log latency only if necessary for debugging
                             // console.log('Latency:', latency);
                         }
                     },
                     uploadMeasurement: function(measurement) {
-                        if (measurement.Data && measurement.Data.MeanClientMbps) {
+                        if (measurement.Source == 'client' && measurement.Data && measurement.Data.MeanClientMbps) {
                             uploadSpeed = (measurement.Data.MeanClientMbps).toFixed(2); // Mbps
                             document.getElementById("progress").innerText = `Upload Speed: ${uploadSpeed} Mbps`;
                             // Log upload speed only if necessary for debugging
