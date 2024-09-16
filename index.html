@@ -85,24 +85,28 @@
                 },
                 {
                     serverChosen: function(server) {
-                        console.log('Testing to:', server);
+                        // Log server information only if necessary for debugging
+                        // console.log('Testing to:', server);
                     },
                     downloadMeasurement: function(measurement) {
                         if (measurement.Data && measurement.Data.MeanClientMbps) {
                             downloadSpeed = (measurement.Data.MeanClientMbps).toFixed(2); // Mbps
                             document.getElementById("progress").innerText = `Download Speed: ${downloadSpeed} Mbps`;
-                            console.log('Download Speed:', downloadSpeed);
+                            // Log download speed only if necessary for debugging
+                            // console.log('Download Speed:', downloadSpeed);
                         }
                         if (measurement.Source === 'server' && measurement.Data.BBRInfo && measurement.Data.BBRInfo.MinRTT) {
                             latency = (measurement.Data.BBRInfo.MinRTT / 1000).toFixed(2); // ms
-                            console.log('Latency:', latency);
+                            // Log latency only if necessary for debugging
+                            // console.log('Latency:', latency);
                         }
                     },
                     uploadMeasurement: function(measurement) {
                         if (measurement.Data && measurement.Data.MeanClientMbps) {
                             uploadSpeed = (measurement.Data.MeanClientMbps).toFixed(2); // Mbps
                             document.getElementById("progress").innerText = `Upload Speed: ${uploadSpeed} Mbps`;
-                            console.log('Upload Speed:', uploadSpeed);
+                            // Log upload speed only if necessary for debugging
+                            // console.log('Upload Speed:', uploadSpeed);
                         }
                     }
                 }
@@ -117,7 +121,8 @@
                 document.getElementById("runSpeedTest").innerText = "Run Speed Test";
                 document.getElementById("progress").innerText = "Speed test completed.";
             }).catch((error) => {
-                console.error('NDT7 Error:', error);
+                // Log error only if necessary for debugging
+                // console.error('NDT7 Error:', error);
                 alert("Speed test failed. Please try again.");
                 // Re-enable the button
                 document.getElementById("runSpeedTest").disabled = false;
