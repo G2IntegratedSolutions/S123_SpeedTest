@@ -94,13 +94,13 @@
                             document.getElementById("progress").innerText = `Download Speed: ${downloadSpeed} Mbps`;
                             // Log download speed only if necessary for debugging
                             console.log('Download Speed:', downloadSpeed);
-                            console.log('Download Measurement:', measurement.Data);
+                            console.log('Download Measurement:', measurement);
                         }
                         if (measurement.Source === 'server' && measurement.Data.TCPInfo && measurement.Data.TCPInfo.MinRTT) {
                             latency = (measurement.Data.TCPInfo.MinRTT / 1000).toFixed(2); // ms
                             // Log latency only if necessary for debugging
                             console.log('Latency:', latency);
-                            console.log('Latency Measurement:', measurement.Data);
+                            console.log('Latency Measurement:', measurement);
                         }
                     },
                     uploadMeasurement: function(measurement) {
@@ -109,7 +109,7 @@
                             document.getElementById("progress").innerText = `Upload Speed: ${uploadSpeed} Mbps`;
                             // Log upload speed only if necessary for debugging
                             console.log('Upload Speed:', uploadSpeed);
-                            console.log('Upload Measurement:', measurement.Data); // 
+                            console.log('Upload Measurement:', measurement); // 
                         }
                     }
                 }
