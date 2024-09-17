@@ -19,7 +19,7 @@
             width: 100%;
             height: calc(100% - 60px);
             overflow: auto;
-        }
+        } 
         #runSpeedTestBar {
             position: fixed;
             bottom: 0;
@@ -27,7 +27,7 @@
             background-color: #B7DCC7;
             text-align: center;
             padding: 10px 0;
-            padding-left: -18px;
+            padding-left: -32px;
         }
         #runSpeedTest {
             padding: 10px 20px;
@@ -37,8 +37,8 @@
             border-radius: 4px;   
             cursor: pointer;
             font-weight: bold;
-            margin-left: -18px;
-        }
+            margin-left: -32px;
+        } 
         #runSpeedTest:hover {
             background-color: #accfab;
             color: rgb(0, 0, 0);
@@ -49,9 +49,10 @@
             color: rgb(0, 0, 0);
             font-size: 16px;
             font-weight: bold;
-            margin-left: -18px;
+            margin-left: -32px;
             
         }
+
     </style>
 </head>
 <body>
@@ -93,8 +94,8 @@
                     },
                     downloadMeasurement: function(measurement) {
                         if (measurement.Source == 'client' && measurement.Data && measurement.Data.MeanClientMbps) {
-                            downloadSpeed = (measurement.Data.MeanClientMbps).toFixed(2); // Mbps
-                            document.getElementById("progress").innerText = `Download Speed: ${downloadSpeed} Mbps`;
+                            downloadSpeed = (measurement.Data.MeanClientMbps).toFixed(2); // Mbps                     
+                            document.getElementById("progress").innerText = `Download Speed: ${downloadSpeed} Mbps`;                           
                             // Log download speed only if necessary for debugging
                             //console.log('Download Speed:', downloadSpeed);
                             //console.log('Download Measurement:', measurement);
@@ -108,14 +109,16 @@
                     },
                     uploadMeasurement: function(measurement) {
                         if (measurement.Source == 'client' && measurement.Data && measurement.Data.MeanClientMbps) {
-                            uploadSpeed = (measurement.Data.MeanClientMbps).toFixed(2); // Mbps
-                            document.getElementById("progress").innerText = `Upload Speed: ${uploadSpeed} Mbps`;
+                            uploadSpeed = (measurement.Data.MeanClientMbps).toFixed(2); // Mbps                            
+                            document.getElementById("progress").innerText = `Upload Speed: ${uploadSpeed} Mbps`;                       
                             // Log upload speed only if necessary for debugging
                             //console.log('Upload Speed:', uploadSpeed);
                             //console.log('Upload Measurement:', measurement); // 
                         }
                     }
                 }
+
+
             ).then(() => {
                 // Populate the survey fields with results
                 survey123WebForm.setQuestionValue({'download_speed': parseFloat(downloadSpeed)});
