@@ -14,10 +14,11 @@
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
+            overflow: hidden;
         }
         #survey123Container {
             width: 100%;
-            height: calc(100% - 60px);
+            height: 100%;
             overflow: auto;
         } 
         #runSpeedTestBar {
@@ -53,6 +54,7 @@
             
         }
 
+
     </style>
 </head>
 <body>
@@ -61,10 +63,13 @@
         <button id="runSpeedTest">Run Speed Test</button>
         <div id="progress"></div>
     </div>
+
+
     <script>
         // Initialize the Survey123 Web Form
         var survey123WebForm = new Survey123WebForm({
-            itemId: "d76488086d8a4fae8ab8c3a84b0496ac", // form's item ID
+            //itemId: "d76488086d8a4fae8ab8c3a84b0496ac", // form's item ID
+            itemId: "8f66cf7fafd3444fac60e96d1c54810b",
             container: "survey123Container"
         });
 
