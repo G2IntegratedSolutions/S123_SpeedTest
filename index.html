@@ -3,151 +3,69 @@
 <head>
     <title>ENTRUST Standard Internet Survey</title>
     <!-- Include Survey123 Web Form JavaScript API -->
-    <script src="https://survey123.arcgis.com/api/jsapi"></script>
-    <!-- Include M-Lab NDT JavaScript library -->
+    <script src="https://survey123.arcgis.com/api/jsapi"></script> 
+    <!-- Include M-Lab NDT JavaScript library --> 
     <script src="https://cdn.jsdelivr.net/gh/m-lab/ndt7-js/src/ndt7.min.js"></script>
-    <!-- Add CSS to style the page -->
-    <style>
-        html, body {
-            height: 100%;
-            width: 100%;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            overflow: hidden;
-        }
-        #survey123Container {
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-        } 
-        #runSpeedTestBar {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background-color: #B7DCC7;
-            text-align: center;
-            padding: 10px 0;
-            padding-left: -32px;
-        }
-        #runSpeedTest {
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #31872e;
-            color: rgb(255, 255, 255);
-            border-radius: 4px;   
-            cursor: pointer;
-            font-weight: bold;
-            margin-left: -32px;
-        } 
-        #runSpeedTest:hover {
-            background-color: #accfab;
-            color: rgb(0, 0, 0);
-            font-weight: bold;
-           
-        }
-        #progress {
-            color: rgb(0, 0, 0);
-            font-size: 16px;
-            font-weight: bold;
-            margin-left: -32px;
-            
-        }
-
-
-    </style>
+     <!-- Include Chart.js --> 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
+    <!-- Include Chart.js Plugin for Data Labels --> 
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script> 
+  
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Survey123 Container -->
     <div id="survey123Container"></div>
-    <div id="runSpeedTestBar">
-        <button id="runSpeedTest">Run Speed Test</button>
-        <div id="progress"></div>
+
+    <!-- Speed Test Section -->
+    <div id="speedTestSection">
+        <button id="closeSpeedTestSection" class="close-button">&times;</button>
+        <!-- Gauges and Button Container -->
+        <div id="gaugesAndButtonContainer">
+            <!-- Download Gauge -->
+            <div class="gaugeWrapper">
+                <div class="gaugeLabel">Download (Mbps)</div>
+                <canvas id="downloadGauge"></canvas>
+            </div>
+
+            <!-- Run Speed Test Button -->
+            <button id="runSpeedTest">Run Speed Test</button>
+
+            <!-- Upload Gauge -->
+            <div class="gaugeWrapper">
+                <div class="gaugeLabel">Upload (Mbps)</div>
+                <canvas id="uploadGauge"></canvas>
+            </div>
+
+            <!-- Results Table -->
+            <table id="resultsTable" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>Download Speed</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td id="downloadResult">- Mbps</td>
+                    </tr>
+                    <tr>
+                        <th>Upload Speed</th>
+                    </tr>
+                    <tr>
+                        <td id="uploadResult">- Mbps</td>
+                    </tr>
+                    <tr>
+                        <th>Latency</th>
+                    </tr>
+                    <tr>
+                        <td id="latencyResult">- ms</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
-
-    <script>
-        // Initialize the Survey123 Web Form
-        var survey123WebForm = new Survey123WebForm({
-            //itemId: "d76488086d8a4fae8ab8c3a84b0496ac", // form's item ID
-            //itemId: "8f66cf7fafd3444fac60e96d1c54810b",
-            itemId: "0d7a173cf2224fb5bde595c994e4312d",
-            container: "survey123Container"
-        });
-
-        // Function to run the NDT Speed Test
-        function runSpeedTest() {
-            // Disable the button to prevent multiple clicks
-            document.getElementById("runSpeedTest").disabled = true;
-            document.getElementById("runSpeedTest").innerText = "Running...";
-            document.getElementById("progress").innerText = "Starting speed test...";
-
-            // Initialize the NDT7 client
-            let downloadSpeed = 0;
-            let uploadSpeed = 0;
-            let latency = 0;
-
-            // Start the test
-            ndt7.test(
-                {
-                    userAcceptedDataPolicy: true, // Required by M-Lab's policy
-                    downloadWorkerScript: 'ndt7-download-worker.min.js',
-                    uploadWorkerScript: 'ndt7-upload-worker.min.js'
-                },
-                {
-                    serverChosen: function(server) {
-                        // Log server information only if necessary for debugging 
-                        // console.log('Testing to:', server);
-                    },
-                    downloadMeasurement: function(measurement) {
-                        if (measurement.Source == 'client' && measurement.Data && measurement.Data.MeanClientMbps) {
-                            downloadSpeed = (measurement.Data.MeanClientMbps).toFixed(2); // Mbps                     
-                            document.getElementById("progress").innerText = `Download Speed: ${downloadSpeed} Mbps`;                           
-                            // Log download speed only if necessary for debugging
-                            //console.log('Download Speed:', downloadSpeed);
-                            //console.log('Download Measurement:', measurement);
-                        }
-                        if (measurement.Source === 'server' && measurement.Data.TCPInfo && measurement.Data.TCPInfo.MinRTT) {
-                            latency = (measurement.Data.TCPInfo.MinRTT / 1000).toFixed(2); // ms
-                            // Log latency only if necessary for debugging
-                            //console.log('Latency:', latency);
-                            //console.log('Latency Measurement:', measurement);
-                        }
-                    },
-                    uploadMeasurement: function(measurement) {
-                        if (measurement.Source == 'client' && measurement.Data && measurement.Data.MeanClientMbps) {
-                            uploadSpeed = (measurement.Data.MeanClientMbps).toFixed(2); // Mbps                            
-                            document.getElementById("progress").innerText = `Upload Speed: ${uploadSpeed} Mbps`;                       
-                            // Log upload speed only if necessary for debugging
-                            //console.log('Upload Speed:', uploadSpeed);
-                            //console.log('Upload Measurement:', measurement); // 
-                        }
-                    }
-                }
-
-
-            ).then(() => {
-                // Populate the survey fields with results
-                survey123WebForm.setQuestionValue({'download_speed': parseFloat(downloadSpeed)});
-                survey123WebForm.setQuestionValue({'upload_speed': parseFloat(uploadSpeed)});
-                survey123WebForm.setQuestionValue({'latency': parseFloat(latency)});
-
-                // Re-enable the button
-                document.getElementById("runSpeedTest").disabled = false;
-                document.getElementById("runSpeedTest").innerText = "Run Speed Test";
-                document.getElementById("progress").innerText = "Speed test completed.";
-            }).catch((error) => {
-                // Log error only if necessary for debugging
-                // console.error('NDT7 Error:', error);
-                alert("Speed test failed. Please try again.");
-                // Re-enable the button
-                document.getElementById("runSpeedTest").disabled = false;
-                document.getElementById("runSpeedTest").innerText = "Run Speed Test";
-                document.getElementById("progress").innerText = "Speed test failed.";
-            });
-        }
-
-        // Add event listener to the button
-        document.getElementById("runSpeedTest").addEventListener("click", runSpeedTest); 
-    </script>
+    <!-- JavaScript to Initialize Survey and Gauges and Run Speed Test-->
+    <script src="speedTest.js"></script>
 </body>
 </html>

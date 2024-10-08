@@ -1,0 +1,167 @@
+  /* Global Box-sizing */
+  *, *::before, *::after {
+    box-sizing: border-box;
+}
+
+/* Reset default margins and paddings */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
+
+/* Set up flex container */
+body {
+    display: flex;
+    flex-direction: column;
+    background-color: #B7DCC7; /* Entire page background color */
+    font-family: "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+/* Survey Container */
+#survey123Container {
+    flex: 1;
+    width: 100%;
+    background-color: #B7DCC7; /* Match the rest of the page */
+    padding: 0; /* Remove padding to eliminate white gap */
+    overflow: auto;
+}
+
+/* Speed Test Section */
+#speedTestSection {
+    position:relative;
+    background-color: #B7DCC7; /* Matching background */
+    padding: 20px 0; /* Adjusted padding */
+    display: none; /* Initially hidden */
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 50px;
+}
+
+/*Close Button*/
+#closeSpeedTestSection {
+    position: absolute;
+    top: -17px;
+    left: 65%;
+    transform: translateX(-50%);
+    background-color: transparent;
+    color:#000;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    
+}
+
+#closeSpeedTestSection:hover {
+    color: #ff0000;
+}
+
+/* Gauges and Button Container */
+#gaugesAndButtonContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 800px;
+}
+
+/* Individual Gauge Wrapper */
+.gaugeWrapper {
+    position: relative;
+    width: 150px;
+    height: 150px;
+}
+
+/* Ensure canvas fills the wrapper */
+.gaugeWrapper canvas {
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
+}
+
+.gaugeLabel {
+    position: absolute;
+    top: -35px; /* Adjust as needed */
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 18px;
+    font-weight: bold;
+    font-style: normal;
+    color: #000;
+    text-align: center;
+    white-space: nowrap;
+}       
+
+/* Run Speed Test Button */
+#runSpeedTest {
+    padding: 12px 24px;
+    font-size: 16px;
+    background-color: #31872e;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    height: 50px;
+    font-family: "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    
+}
+
+#runSpeedTest:disabled {
+    background-color: #a5d6a7;
+    cursor: not-allowed;
+}
+
+#runSpeedTest:hover:not(:disabled) {
+    background-color: #256c1c;
+}
+
+/* Results Table */
+#resultsTable {
+    width: 175px;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+#resultsTable th, #resultsTable td {
+    padding: 5px 8px;
+    text-align: center;
+    border-bottom: 1px solid #dddddd;
+    font-size: 16px;
+}
+
+#resultsTable th {
+    background-color: #31872e;
+    color: #ffffff;
+}
+
+#resultsTable tr:last-child td {
+    border-bottom: none;
+}
+
+#resultsTable tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    #gaugesAndButtonContainer {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #resultsTable {
+        margin-left: 0;
+        margin-top: 20px;
+    }
+}
+
