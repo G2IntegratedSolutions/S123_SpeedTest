@@ -191,16 +191,16 @@
 
     // Wait for survey to be fully loaded
     survey123WebForm.setOnFormLoaded(function() {
-        // Listen for changes to the 'how_is_this_location_connected' question
+        // Listen for changes to the 'HowLocationConnectedInternet' question
         survey123WebForm.setOnQuestionValueChanged(function(event) {
-            if (event.field === 'how_is_this_location_connected') { 
+            if (event.field === 'HowLocationConnectedInternet') { 
                 handleBroadbandConnectionChange(event.value);
             }
         });
 
-        // Check the initial value of 'how_is_this_location_connected' question
+        // Check the initial value of 'HowLocationConnectedInternet' question
         // change name of question to match the survey
-        survey123WebForm.getQuestionValue('how_is_this_location_connected').then(function(question) {
+        survey123WebForm.getQuestionValue('HowLocationConnectedInternet').then(function(question) {
             var value = question.value;
             handleBroadbandConnectionChange(value);
         });
