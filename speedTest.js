@@ -175,18 +175,41 @@
         document.getElementById('speedTestSection').style.display = 'none';
     });
 
-    // Function to handle changes in the how_is_this_location_connected question
+    // Allowed Connection Types
+    const allowedConnectionTypes = [
+        'CableModem', 
+        'DigitalSubscriber', 
+        'EnterpriseInternet', 
+        'FiberOptic', 
+        'FixedWireless'
+       ];
+
+    // Function to handle changes in the HowLocationConnectedInternet question
     function handleBroadbandConnectionChange(value) {
-        if (value ===  null || value === undefined || value === '') {
-            // Hide the speed test section
-            document.getElementById('speedTestSection').style.display = 'none';    
+        //console.log('Selected Connection Types:', value);
+        // Check if value is an array (for multiple choice questions)
+        let selectedValues = [];
+        if (Array.isArray(value)) {
+            selectedValues = value;
+        } else if (value) {
+            selectedValues = [value];
         }
-        else {        
-            // Show the speed test section
+
+        // Determine if any of the selected values are in the allowed connection types
+        const hasAllowedConnection = selectedValues.some(function(val) {
+            return allowedConnectionTypes.includes(val);
+        });
+
+        if (hasAllowedConnection) {
+            // A valid connection type is selected
             document.getElementById('speedTestSection').style.display = 'flex';
             // Initialize gauges if not already done
             initializeGauges();
-        } 
+        } else {
+            // No valid connection type is selected or selection is empty
+            document.getElementById('speedTestSection').style.display = 'none';
+        }
+
     }
 
     // Wait for survey to be fully loaded
