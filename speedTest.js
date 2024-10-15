@@ -185,23 +185,26 @@
        ];
 
     // Function to handle changes in the HowLocationConnectedInternet question
-    function handleBroadbandConnectionChange(value) {
-        //console.log('Selected Connection Types:', value);
+    function handleBroadbandConnectionChange(internetValue, providerValue) {
+        //console.log('Selected Connection Types:', internetValue);
+        //console.log('Broadband Provider:', providerValue);
         // Check if value is an array (for multiple choice questions)
-        let selectedValues = [];
-        if (Array.isArray(value)) {
-            selectedValues = value;
-        } else if (value) {
-            selectedValues = [value];
+        let selectedInternetValues = [];
+        if (Array.isArray(internetValue)) {
+            selectedInternetValues = internetValue;
+        } else if (internetValue) {
+            selectedInternetValues = [internetValue];
         }
 
         // Determine if any of the selected values are in the allowed connection types
-        const hasAllowedConnection = selectedValues.some(function(val) {
+        const hasAllowedConnection = selectedInternetValues.some(function(val) {
             return allowedConnectionTypes.includes(val);
         });
 
-        if (hasAllowedConnection) {
-            // A valid connection type is selected
+        const hasBroadbandProvider = providerValue !== null && providerValue !== undefined && providerValue !== '';
+
+        if (hasAllowedConnection && hasBroadbandProvider) {
+            // A valid connection type is selected and provider is not empty
             document.getElementById('speedTestSection').style.display = 'flex';
             // Initialize gauges if not already done
             initializeGauges();
@@ -212,20 +215,35 @@
 
     }
 
-    // Wait for survey to be fully loaded
-    survey123WebForm.setOnFormLoaded(function() {
-        // Listen for changes to the 'HowLocationConnectedInternet' question
-        survey123WebForm.setOnQuestionValueChanged(function(event) {
-            if (event.field === 'HowLocationConnectedInternet') { 
-                handleBroadbandConnectionChange(event.value);
-            }
-        });
 
-        // Check the initial value of 'HowLocationConnectedInternet' question
-        // change name of question to match the survey
-        survey123WebForm.getQuestionValue('HowLocationConnectedInternet').then(function(question) {
-            var value = question.value;
-            handleBroadbandConnectionChange(value);
+// Wait for survey to be fully loaded
+survey123WebForm.setOnFormLoaded(function() {
+    // Function to get both question values and handle changes
+    function updateSpeedTestSection() {
+      
+        survey123WebForm.getQuestionValue().then(function(questions) {
+            //console.log('Questions Object:', questions);
+
+            const internetValue = questions['HowLocationConnectedInternet'];
+            const providerValue = questions['CompanyProvidesBroadband'];
+
+            //console.log('Internet Value:', internetValue);
+            //console.log('Provider Value:', providerValue);
+
+            handleBroadbandConnectionChange(internetValue, providerValue);
+        }).catch(function(error) {
+            console.error('Error getting question values:', error);
         });
+    }
+
+    // Listen for changes to the 'HowLocationConnectedInternet' and 'CompanyProvidesBroadband' questions
+    survey123WebForm.setOnQuestionValueChanged(function(event) {
+        if (event.field === 'HowLocationConnectedInternet' || event.field === 'CompanyProvidesBroadband') {
+            updateSpeedTestSection();
+        }
     });
+
+    // Check the initial values of 'HowLocationConnectedInternet' and 'CompanyProvidesBroadband' questions
+    updateSpeedTestSection();
+});
 
