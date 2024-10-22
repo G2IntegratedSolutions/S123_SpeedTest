@@ -1,7 +1,7 @@
     // Initialize the Survey123 Web Form
     var survey123WebForm = new Survey123WebForm({
         // Replace with your actual form's item ID
-        itemId: "cd8d844560384f9a8c33107948803e38", // Updated survey, from Lauren
+        itemId: "bcb89f128ea744a28f3ea5042ec6f3d9", // Updated survey, from Lauren
         container: "survey123Container"
     });
 
@@ -222,7 +222,7 @@ survey123WebForm.setOnFormLoaded(function() {
         survey123WebForm.getQuestionValue().then(function(questions) {
             //console.log('Questions Object:', questions);
 
-            const internetValue = questions['HowLocationConnectedInternet'];
+            const internetValue = questions['HowLocationConnectInternet'];
             const providerValue = questions['CompanyProvidesBroadband'];
 
             //console.log('Internet Value:', internetValue);
@@ -236,7 +236,7 @@ survey123WebForm.setOnFormLoaded(function() {
 
     // Listen for changes to the 'HowLocationConnectedInternet' and 'CompanyProvidesBroadband' questions
     survey123WebForm.setOnQuestionValueChanged(function(event) {
-        if (event.field === 'HowLocationConnectedInternet' || event.field === 'CompanyProvidesBroadband') {
+        if (event.field === 'HowLocationConnectInternet' || event.field === 'CompanyProvidesBroadband') {
             updateSpeedTestSection();
         }
     });
